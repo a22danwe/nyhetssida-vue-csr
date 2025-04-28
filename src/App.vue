@@ -129,7 +129,7 @@ onMounted(async () => {
       console.log(`${label}: ${time.toFixed(2)} ms`)
       saveRenderTime(label, time)
 
-      if (getReloadCount() < 50) {
+      if (getReloadCount() < 200) {
         incrementReloadCount()
         setTimeout(() => location.reload(), 300)
       } else {
