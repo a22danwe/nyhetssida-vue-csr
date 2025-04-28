@@ -106,6 +106,7 @@ const onPanelChange = () => {
 async function measureRender(label = 'Render') {
   renderStart.value = performance.now()
   await nextTick()
+  await new Promise(resolve => requestAnimationFrame(resolve)) // Vänta på nästa målning
   const renderEnd = performance.now()
   const time = renderEnd - renderStart.value
 
@@ -116,31 +117,29 @@ async function measureRender(label = 'Render') {
   console.log(`${label}: ${time.toFixed(2)} ms`)
 }
 
-aasync function startPagingTest() {
-  let direction = 1; // 1 = nästa sida, -1 = föregående sida
-  let iteration = 0;
-  const totalIterations = 200; // eller valfritt antal mätningar
+async function startPagingTest() {
+  let direction = 1 // 1 = nästa sida, -1 = föregående
+  let steps = 0
+  const maxSteps = 50
 
-  while (iteration < totalIterations) {
+  while (steps < maxSteps) {
     if (direction === 1 && currentPage.value < totalPages.value) {
-      currentPage.value++;
+      currentPage.value++
     } else if (direction === -1 && currentPage.value > 1) {
-      currentPage.value--;
+      currentPage.value--
     }
 
-    await nextTick();
-    await measureRender(`Page change ${iteration + 1}`);
+    await measureRender(`Page change ${steps + 1}`)
 
-    iteration++;
+    steps++
 
-    // Växla riktning vid slutet av sidantalet
-    if (currentPage.value === totalPages.value) direction = -1;
-    if (currentPage.value === 1) direction = 1;
+    if (currentPage.value === totalPages.value) direction = -1
+    if (currentPage.value === 1) direction = 1
 
-    await new Promise(resolve => setTimeout(resolve, 300)); // Vänta lite mellan sidbytena
+    await new Promise(resolve => setTimeout(resolve, 300)) // Vänta lite mellan varje mätning
   }
 
-  exportCSV(); // Exportera CSV efter alla mätningar
+  exportCSV() // Exportera CSV efter 50 byten
 }
 
 
@@ -148,7 +147,7 @@ onMounted(async () => {
   const start = performance.now()
   await fetchJson()
   await nextTick()
-  startPagingTest();
+
 
   setTimeout(() => {
     requestAnimationFrame(() => {
@@ -215,6 +214,9 @@ onMounted(async () => {
     <div class="sidebar left"></div>
     <div class="sidebar right"></div>
   </div>
+  <div class="testPaging">
+  <button @click="startPagingTest">Starta Paging-test</button>
+</div>
 </template>
 
 
