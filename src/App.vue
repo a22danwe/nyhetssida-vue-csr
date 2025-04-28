@@ -120,7 +120,7 @@ async function measureRender(label = 'Render') {
 async function startPagingTest() {
   let direction = 1 // 1 = nästa sida, -1 = föregående
   let steps = 0
-  const maxSteps = 50
+  const maxSteps = 200
 
   while (steps < maxSteps) {
     if (direction === 1 && currentPage.value < totalPages.value) {
@@ -139,7 +139,7 @@ async function startPagingTest() {
     await new Promise(resolve => setTimeout(resolve, 300)) // Vänta lite mellan varje mätning
   }
 
-  exportCSV() // Exportera CSV efter 50 byten
+  exportCSV() // Exportera CSV efter 200 byten
 }
 
 
