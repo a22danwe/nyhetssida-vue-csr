@@ -116,10 +116,39 @@ async function measureRender(label = 'Render') {
   console.log(`${label}: ${time.toFixed(2)} ms`)
 }
 
+aasync function startPagingTest() {
+  let direction = 1; // 1 = nästa sida, -1 = föregående sida
+  let iteration = 0;
+  const totalIterations = 200; // eller valfritt antal mätningar
+
+  while (iteration < totalIterations) {
+    if (direction === 1 && currentPage.value < totalPages.value) {
+      currentPage.value++;
+    } else if (direction === -1 && currentPage.value > 1) {
+      currentPage.value--;
+    }
+
+    await nextTick();
+    await measureRender(`Page change ${iteration + 1}`);
+
+    iteration++;
+
+    // Växla riktning vid slutet av sidantalet
+    if (currentPage.value === totalPages.value) direction = -1;
+    if (currentPage.value === 1) direction = 1;
+
+    await new Promise(resolve => setTimeout(resolve, 300)); // Vänta lite mellan sidbytena
+  }
+
+  exportCSV(); // Exportera CSV efter alla mätningar
+}
+
+
 onMounted(async () => {
   const start = performance.now()
   await fetchJson()
   await nextTick()
+  startPagingTest();
 
   setTimeout(() => {
     requestAnimationFrame(() => {
