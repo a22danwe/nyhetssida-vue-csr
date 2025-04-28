@@ -197,6 +197,9 @@ onMounted(async () => {
       <div class="exportCSV">
         <button @click="exportCSV">Exportera som CSV</button>
       </div>
+      <div class="testPaging">
+        <button @click="startPagingTest">Starta Paging-test</button>
+      </div>
     </div>
 
     <div class="modal" v-if="selectedArticle" @click.self="selectedArticle = null">
@@ -214,9 +217,6 @@ onMounted(async () => {
     <div class="sidebar left"></div>
     <div class="sidebar right"></div>
   </div>
-  <div class="testPaging">
-  <button @click="startPagingTest">Starta Paging-test</button>
-</div>
 </template>
 
 
