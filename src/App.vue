@@ -45,7 +45,7 @@ const exportCSV = () => {
 
 const fetchJson = async () => {
   try {
-    const res = await fetch("dataset.json")
+    const res = await fetch("datasetSmall.json")
     const json = await res.json()
     const data = json.data
     const allData = data.map((row, index) => ({
@@ -120,7 +120,7 @@ async function measureRender(label = 'Render') {
 async function startPagingTest() {
   let direction = 1 // 1 = nästa sida, -1 = föregående
   let steps = 0
-  const maxSteps = 200
+  const maxSteps = 2000
 
   while (steps < maxSteps) {
     if (direction === 1 && currentPage.value < totalPages.value) {
@@ -157,7 +157,7 @@ onMounted(async () => {
       console.log(`${label}: ${time.toFixed(2)} ms`)
       saveRenderTime(label, time)
 
-      if (getReloadCount() < 200) {
+      if (getReloadCount() < 1) {
         incrementReloadCount()
         setTimeout(() => location.reload(), 300)
       } else {
